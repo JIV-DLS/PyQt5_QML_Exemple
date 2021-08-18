@@ -15,7 +15,7 @@ ColumnLayout {
                     width: 500
                     height: 55
                     Column {
-                                Text { text: '<b>Title:</b> ' + name }
+                                Text { text: '<b>Name:</b> ' + name }
                                 Text { text: '<b>Age:</b> ' + age }
                                 Text { text: '<b>Wage:</b> ' + wage }
                             }
@@ -37,6 +37,7 @@ ColumnLayout {
                     }
                     Button {
                         text: "Delete"
+                        enabled: deleteButtonState
                         onClicked: {
                             PersonModel.delete(index)
                             --root.current_model_size
@@ -70,4 +71,3 @@ ColumnLayout {
         flickableDirection: Flickable.AutoFlickDirection
     }
 }
-
