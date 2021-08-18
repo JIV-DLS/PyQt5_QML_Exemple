@@ -58,7 +58,7 @@ class PersonModel(QAbstractListModel):
 
     #Ajout d'une personne en fin de liste
     @pyqtSlot(str, str, int)
-    def addToBotom(self, name, age,wage):
+    def addToBottom(self, name, age,wage):
         self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount())
         self.persons.append({'name': name, 
         'age': age,
