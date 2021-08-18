@@ -7,6 +7,7 @@ class PersonModel(QAbstractListModel):
     AgeRole = Qt.UserRole + 2
     ImageRole = Qt.UserRole + 3
     WageRole = Qt.UserRole + 4
+    DeleteButtonState = Qt.UserRole + 5
     def __init__(self, parent=None):
         super().__init__(parent)
         #generation de 5000 données
@@ -16,7 +17,9 @@ class PersonModel(QAbstractListModel):
              'image':'https://www.gettyimages.fr/gi-resources/images/500px/983794168.jpg' \
                  if i%1000==0 and i>0 else \
                      'https://d1fmx1rbmqrxrr.cloudfront.net/cnet/optim/i/edit/2019/04/eso1644bsmall__w770.jpg',
-             'wage': 5000} for i in range(5000)
+             'wage': 5000,
+            'deleteButtonState':True} for i in range(5000)
+            
         ]
 
     #Chargement du bon élément de la liste en fonction de l'index
@@ -31,6 +34,8 @@ class PersonModel(QAbstractListModel):
             return self.persons[row]["image"]
         if role == PersonModel.WageRole:
             return self.persons[row]["wage"]
+        if role == PersonModel.DeleteButtonState:
+            return self.persons[row]["deleteButtonState"]
 
     def rowCount(self, parent=QModelIndex()):
         return len(self.persons)
@@ -41,7 +46,8 @@ class PersonModel(QAbstractListModel):
             PersonModel.NameRole: b'name',
             PersonModel.AgeRole: b'age',
             PersonModel.ImageRole: b'image',
-            PersonModel.WageRole: b'wage'
+            PersonModel.WageRole: b'wage',
+            PersonModel.DeleteButtonState: b'deleteButtonState'
         }
 
     #Ajout d'une personne en début de liste
@@ -53,7 +59,8 @@ class PersonModel(QAbstractListModel):
         'image':  'https://www.gettyimages.fr/gi-resources/images/500px/983794168.jpg' \
             if self.rowCount()%1000==0 and self.rowCount()>0 else \
                 'https://d1fmx1rbmqrxrr.cloudfront.net/cnet/optim/i/edit/2019/04/eso1644bsmall__w770.jpg',
-        'wage': wage})
+        'wage': wage,
+        'deleteButtonState':True})
         self.endInsertRows()
 
     #Ajout d'une personne en fin de liste
@@ -65,14 +72,17 @@ class PersonModel(QAbstractListModel):
         'image':  'https://www.gettyimages.fr/gi-resources/images/500px/983794168.jpg' \
             if self.rowCount()%1000==0 and self.rowCount()>0 else\
                  'https://d1fmx1rbmqrxrr.cloudfront.net/cnet/optim/i/edit/2019/04/eso1644bsmall__w770.jpg',
-        'wage': wage})
+        'wage': wage,
+        'deleteButtonState':True})
         self.endInsertRows()
 
-    #Modification d'un attribut
+    #Modification d'un attribut: salaire
+    #Lorsque le salire d'une personne est modifié son boutton de suppression passe au rouge(voir qml)
     @pyqtSlot(int, int)
     def increaseWageOf(self, row, increseValue):
         ix = self.index(row, 0)
         self.persons[row]['wage'] = self.persons[row]['wage'] + increseValue
+        self.persons[row]['deleteButtonState'] = False
         self.dataChanged.emit(ix, ix, self.roleNames())
 
     #Suppression d'un élément
